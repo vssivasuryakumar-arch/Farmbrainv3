@@ -1,0 +1,16 @@
+{
+  "id": "/",
+  "name": "FARM BRAIN",
+  "short_name": "Farm Brain",
+  "description": "Agriculture profiles, marketplace, transport, inventory and farm support.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f3ea",
+  "theme_color": "#142d23",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
