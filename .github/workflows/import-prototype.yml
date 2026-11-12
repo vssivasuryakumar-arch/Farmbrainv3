@@ -1,3 +1,19 @@
+ 
+name: Save FARM BRAIN Project
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  save:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Save project to GitHub
         run: |
@@ -5,13 +21,11 @@
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add -A
-
           git reset -q HEAD -- .github/ || true
 
           if ! git diff --cached --quiet; then
             git commit -m "Import complete FARM BRAIN prototype"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            git push
           else
-            echo "No files staged for import"
-            exit 1
+            echo "No changes to save"
           fi
