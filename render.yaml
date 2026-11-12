@@ -1,0 +1,44 @@
+# FARM BRAIN free demonstration deployment.
+# Render Free hosts the Flask app. Neon Free provides external PostgreSQL.
+# No paid Render database or persistent disk is created by this Blueprint.
+services:
+  - type: web
+    name: farm-brain-free-demo
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 1 --threads 4 --timeout 120 'farm_brain:create_app()'
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: OTP_DEV_MODE
+        value: "false"
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: UPLOAD_FOLDER
+        value: /tmp/farmbrain/uploads
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: SMTP_HOST
+        value: smtp-relay.brevo.com
+      - key: SMTP_PORT
+        value: "2525"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"
+      - key: SMTP_USE_SSL
+        value: "false"
