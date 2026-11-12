@@ -1,70 +1,17 @@
 
-name: Import FARM BRAIN Full Prototype
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  import-project:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Extract FARM BRAIN ZIP
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          ZIP_FILE=$(find . -maxdepth 1 -type f \
-            -iname 'FARM_BRAIN_Full_Prototype_v3*.zip' \
-            -print -quit)
-
-          if [ -z "$ZIP_FILE" ]; then
-            echo "FARM BRAIN ZIP not found"
-            exit 1
-          fi
-
-          mkdir -p "$RUNNER_TEMP/farmbrain"
-
-          unzip -q "$ZIP_FILE" \
-            -d "$RUNNER_TEMP/farmbrain"
-
-          SOURCE="$RUNNER_TEMP/farmbrain/FARM_BRAIN_GitHub"
-
-          test -f "$SOURCE/render.yaml"
-          test -d "$SOURCE/farm_brain"
-          test -d "$SOURCE/android"
-          test -d "$SOURCE/docs"
-          test -d "$SOURCE/tests"
-
-          rsync -a --exclude='.github/workflows/***' "$SOURCE/" ./
-
-          rm -f "$ZIP_FILE"
-
-      - name: Verify project
-        run: |
-          test -f render.yaml
-          test -f requirements.txt
-          test -f Procfile
-          test -d farm_brain
-          test -d android
-          test -d docs
-          test -d tests
-          echo "FARM BRAIN files verified"
-
       - name: Save project to GitHub
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git reset -q HEAD -- .github/workflows/ || true
+          git add -A
+
+          git reset -q HEAD -- .github/ || true
 
           if ! git diff --cached --quiet; then
             git commit -m "Import complete FARM BRAIN prototype"
             git push origin "HEAD:${GITHUB_REF_NAME}"
+          else
+            echo "No files staged for import"
+            exit 1
           fi
